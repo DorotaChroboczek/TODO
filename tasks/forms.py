@@ -5,6 +5,7 @@ from django.forms import ModelForm, DateField, TimeField
 from django.forms import *
 
 from .models import *
+from accounts.models import Profile
 
 
 def capitalized_validator(value):
@@ -49,4 +50,12 @@ class DateInput(DateInput):
 class TimeInput(TimeInput):
     input_type = 'time'
 
-    
+
+class ProfileForm(ModelForm):
+    class Meta:
+        model = Profile
+        fields = ('username',)
+
+    username = CharField(widget=TextInput(attrs={'placeholder': 'Name...'}),
+                         max_length=50)
+
