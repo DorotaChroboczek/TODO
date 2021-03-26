@@ -41,3 +41,12 @@ class FutureTimeField(TimeField):
         result = super().clean(value)
         return time(hour=result.hour, minute=result.minute, second=result.second)
 
+
+class DateInput(DateInput):
+    input_type = 'date'
+
+
+class TimeInput(TimeInput):
+    input_type = 'time'
+
+    
