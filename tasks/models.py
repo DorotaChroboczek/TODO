@@ -11,6 +11,10 @@ class MembersGroup(Model):
     def __str__(self):
         return self.member
 
+    @property
+    def name_of_person(self):
+        return self.person.user
+
 
 class Task(Model):
     member = ForeignKey(MembersGroup, to_field='member', on_delete=CASCADE)

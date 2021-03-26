@@ -5,7 +5,7 @@ from .models import *
 
 @admin.register(MembersGroup)
 class MembersGroupAdmin(admin.ModelAdmin):
-    list_display = ('person', 'member')
+    list_display = ('name_of_person', 'member')
 
 
 @admin.register(Task)
