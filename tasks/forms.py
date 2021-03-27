@@ -51,11 +51,28 @@ class TimeInput(TimeInput):
     input_type = 'time'
 
 
-class ProfileForm(ModelForm):
-    class Meta:
-        model = Profile
-        fields = ('username',)
+# class ProfileForm(ModelForm):
+#     class Meta:
+#         model = Profile
+#         fields = ('username',)
+#
+#     username = CharField(widget=TextInput(attrs={'placeholder': 'Name...'}),
+#                          max_length=50)
 
-    username = CharField(widget=TextInput(attrs={'placeholder': 'Name...'}),
-                         max_length=50)
+
+class TaskForm(ModelForm):
+    class Meta:
+        model = Task
+        fields = ('member', 'title', 'date', 'time')
+
+    title = CharField(max_length=250)
+    date = FutureDateField()
+    time = FutureTimeField()
+
+    # def __init__(self, person=None, **kwargs):
+    #     super().__init__(**kwargs)
+    #     if person:
+    #         self.fields['member'].queryset = MembersGroup.objects.filter(person=person)
+
+    # person = ModelChoiceField(queryset=MembersGroup.objects.filter(person=person).all())
 

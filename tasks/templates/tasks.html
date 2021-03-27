@@ -1,0 +1,34 @@
+<div>
+
+    <form method="post" action="/">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" name="Create Task">
+    </form>
+
+    <div>
+        {% for task in tasks %}
+            <div>
+                {{ forloop.counter }}
+            </div>
+            <div>
+                {{ task.member }}
+            </div>
+            <div>
+                {{ task.title }}
+            </div>
+            <div>
+                {{ task.date }}
+            </div>
+            <div>
+                {{ task.time }}
+            </div>
+            <div>
+                {{ task.complete }}
+            </div>
+            <div>
+                {{ task.created }}
+            </div>
+        {% endfor %}
+    </div>
+</div>
