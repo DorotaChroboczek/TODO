@@ -4,8 +4,10 @@ from accounts.models import Profile
 
 
 class MembersGroup(Model):
-    person = ForeignKey(Profile, on_delete=CASCADE)
-    member = CharField(max_length=50, default="My duty",
+    person = ForeignKey(Profile,
+                        on_delete=CASCADE)
+    member = CharField(max_length=50,
+                       default="My duty",
                        null=False, blank=False, unique=True)
 
     def __str__(self):
@@ -17,7 +19,8 @@ class MembersGroup(Model):
 
 
 class Task(Model):
-    member = ForeignKey(MembersGroup, to_field='member', on_delete=CASCADE)
+    member = ForeignKey(MembersGroup, to_field='member',
+                        on_delete=CASCADE)
     title = CharField(max_length=250, null=False, blank=False)
     date = DateField(null=True, blank=True)
     time = DateField(null=True, blank=True)
@@ -26,6 +29,11 @@ class Task(Model):
 
     def __str__(self):
         return self.title
+
+    @property
+    def person(self):
+        person = self.member.name_of_person
+        return person
 
 
 class TaskBody(Model):

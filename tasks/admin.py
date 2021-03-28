@@ -12,7 +12,7 @@ class MembersGroupAdmin(admin.ModelAdmin):
 class TaskAdmin(admin.ModelAdmin):
     list_display = ('member', 'title',
                     'date', 'time',
-                    'complete', 'created')
+                    'complete', 'created', 'person')
 
 
 @admin.register(TaskBody)
