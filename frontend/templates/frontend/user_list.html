@@ -136,6 +136,12 @@
 
 				var user_list = data
 				for (var i in user_list){
+
+					var title = `<span className="title">${user_list[i].title}</span>`
+					if (user_list[i].complete == true){
+						title = `<strike className="title">${user_list[i].title}</strike>`
+					}
+
 					var item = `
 						<div id="data.row-${i}"
 						class="task-wrapper flex-wrapper">
@@ -144,8 +150,7 @@
 								</span>
 							</div>
 							<div style="flex:7">
-								<span class="title">${user_list[i].title}
-								</span>
+								${title}
 							</div>
 							<div style="flex:1">
 								<button class="btn btn-sm btn-outline-info edit">Edit
@@ -163,6 +168,7 @@
 				for (var i in user_list){
 					var editBtn = document.getElementsByClassName('edit')[i]
 					var deleteBtn = document.getElementsByClassName('delete')[i]
+					var title = document.getElementsByClassName('title')[i]
 
 					editBtn.addEventListener('click', (function (item){
 						return function (){
@@ -173,6 +179,12 @@
 					deleteBtn.addEventListener('click', (function (item){
 						return function (){
 							deleteItem(item)
+						}
+					})(user_list[i]))
+
+					title.addEventListener('click', (function (item){
+						return function (){
+							completeStatus(item)
 						}
 					})(user_list[i]))
 
@@ -222,6 +234,21 @@
 					'Content-type': 'application/json',
 					'X-CSRFToken': csrftoken,
 				}
+			}).then((response) => {
+				buildList()
+			})
+		}
+
+		function completeStatus(item){
+			console.log('complete clicked:', item)
+			item.complete = !item.complete
+			fetch(`http://127.0.0.1:8000/api/task-update/${item.id}/`, {
+				method: 'POST',
+				headers: {
+					'Content-type': 'application/json',
+					'X-CSRFToken': csrftoken,
+				},
+				body: JSON.stringify({'member': item.member, 'title': item.title, 'complete': item.complete})
 			}).then((response) => {
 				buildList()
 			})
