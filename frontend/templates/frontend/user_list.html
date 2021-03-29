@@ -73,7 +73,6 @@
 			}
 
 	</style>
-
 </head>
 <body>
     <div class="container">
@@ -82,6 +81,9 @@
 			<div id="form-wrapper">
 				<form id="form">
 					<div class="flex-wrapper">
+						<div style="flex: 6">
+							<input id="member" class="form-control" type="text" name="member" placeholder="Add Member">
+						</div>
 						<div style="flex: 6">
 							<input id="title" class="form-control" type="text" name="title" placeholder="Add task">
 						</div>
@@ -101,10 +103,28 @@
 
 	<script type="text/javascript">
 
+		function getCookie(name) {
+			let cookieValue = null;
+			if (document.cookie && document.cookie !== '') {
+				const cookies = document.cookie.split(';');
+				for (let i = 0; i < cookies.length; i++) {
+					const cookie = cookies[i].trim();
+					// Does this cookie string begin with the name we want?
+					if (cookie.substring(0, name.length + 1) === (name + '=')) {
+						cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+						break;
+					}
+				}
+			}
+			return cookieValue;
+		}
+		const csrftoken = getCookie('csrftoken');
+
 		buildList()
 
 		function buildList(){
 			var wrapper = document.getElementById('list-wrapper')
+			wrapper.innerHTML = ''
 			var url = 'http://127.0.0.1:8000/api/task-list/'
 
 			fetch(url)
@@ -117,6 +137,10 @@
 					var item = `
 						<div id="data.row-${i}"
 						class="task-wrapper flex-wrapper">
+							<div style="flex:7">
+								<span class="member">${user_list[i].member}
+								</span>
+							</div>
 							<div style="flex:7">
 								<span class="title">${user_list[i].title}
 								</span>
@@ -136,6 +160,26 @@
 			})
 		}
 
+		var form = document.getElementById('form-wrapper')
+		form.addEventListener('submit', function(e){
+			e.preventDefault()
+			console.log('Form submitted')
+			var url = 'http://127.0.0.1:8000/api/task-create/'
+			var member = document.getElementById('member').value
+			var title = document.getElementById('title').value
+
+			fetch(url, {
+				method: 'POST',
+				headers: {
+					'Content-type': 'application/json',
+					'X-CSRFToken': csrftoken,
+				},
+				body: JSON.stringify({'member': member, 'title': title})
+			}).then(function (response){
+				buildList()
+			})
+
+		})
 	</script>
 
 
