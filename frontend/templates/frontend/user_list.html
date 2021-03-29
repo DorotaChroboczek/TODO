@@ -177,6 +177,7 @@
 				body: JSON.stringify({'member': member, 'title': title})
 			}).then(function (response){
 				buildList()
+				document.getElementById('form').reset()
 			})
 
 		})
