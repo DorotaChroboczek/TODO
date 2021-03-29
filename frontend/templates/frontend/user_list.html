@@ -120,6 +120,8 @@
 		}
 		const csrftoken = getCookie('csrftoken');
 
+		var activeItem = null
+
 		buildList()
 
 		function buildList(){
@@ -157,6 +159,16 @@
 					`
 					wrapper.innerHTML += item
 				}
+
+				for (var i in user_list){
+					var editBtn = document.getElementsByClassName('edit')[i]
+
+					editBtn.addEventListener('click', (function (item){
+						return function (){
+							editItem(item)
+						}
+					})(user_list[i]))
+				}
 			})
 		}
 
@@ -165,6 +177,11 @@
 			e.preventDefault()
 			console.log('Form submitted')
 			var url = 'http://127.0.0.1:8000/api/task-create/'
+			if (activeItem != null){
+				var url = `http://127.0.0.1:8000/api/task-update/${activeItem.id}/`
+				activeItem = null
+			}
+
 			var member = document.getElementById('member').value
 			var title = document.getElementById('title').value
 
@@ -181,6 +198,13 @@
 			})
 
 		})
+
+		function editItem(item){
+			console.log('Item clicked:', item)
+			activeItem = item
+			document.getElementById('member').value = activeItem.member
+			document.getElementById('title').value = activeItem.title
+		}
 	</script>
 
 
