@@ -1,13 +1,24 @@
-{% extends "main.html" %}
+{% extends "frontend/main.html" %}
 
 {% block content %}
 
-<div>
-    <form method="post">
-        {% csrf_token %}
-        <table>{{ form.as_p }}</table>
-        <input type="submit" value="Submit" class="btn btn-primary">
-    </form>
+<style type="text/css">
+
+
+</style>
+
+<div class="container">
+    <div id="task-container">
+        <div id="form-wrapper">
+            <form method="post" id="form">
+                {% csrf_token %}
+                <div class="flex-wrapper">
+                    <table>{{ form.as_p }}</table>
+                    <input type="submit" value="Submit" class="btn btn-primary">
+                </div>
+            </form>
+        </div>
+    </div>
 </div>
 
 {% endblock %}
