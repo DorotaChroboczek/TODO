@@ -1,0 +1,29 @@
+{% extends "frontend/main.html" %}
+{% load static %}
+
+{% block content %}
+
+    <div class="container">
+
+		<div id="task-container">
+			<div id="form-wrapper">
+				<form id="form">
+					<div class="flex-wrapper">
+						<div style="flex: 6">
+							<input id="member" class="form-control" type="text" name="member" placeholder="Add Member">
+						</div>
+						<div style="flex: 1">
+							<input id="submit" class="btn" type="submit" >
+						</div>
+					</div>
+				</form>
+			</div>
+
+			<div id="members-list-wrapper">
+
+			</div>
+		</div>
+
+	</div>
+
+{% endblock %}

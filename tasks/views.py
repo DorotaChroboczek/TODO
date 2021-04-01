@@ -63,6 +63,13 @@ def task_delete(request, pk):
     task.delete()
     return Response('Item successfully deleted!')
 
+
+@api_view(['GET'])
+def member_list(request):
+    members = MembersGroup.objects.all().order_by('-id')
+    serializer = TaskSerializer(members, many=True)
+    return Response(serializer.data)
+
 # def index(request):
 #     members = MembersGroup.objects.filter(person=request.user.profile)
 #     tasks = Task.objects.get(person=request.user.profile)

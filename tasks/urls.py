@@ -10,4 +10,5 @@ urlpatterns = [
     path('task-create/', task_create, name='task_create'),
     path('task-update/<str:pk>/', task_update, name='task_update'),
     path('task-delete/<str:pk>/', task_delete, name='task_delete'),
+    path('member-list/', member_list, name='member_list'),
 ]
