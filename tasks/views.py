@@ -4,7 +4,7 @@ from django.http import JsonResponse
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
-from .serializers import TaskSerializer
+from .serializers import TaskSerializer, MembersGroupSerializer
 from .models import Task
 from .forms import *
 
@@ -66,9 +66,47 @@ def task_delete(request, pk):
 
 @api_view(['GET'])
 def member_list(request):
-    members = MembersGroup.objects.all().order_by('-id')
-    serializer = TaskSerializer(members, many=True)
+    members = MembersGroup.objects.all()
+    serializer = MembersGroupSerializer(members, many=True)
     return Response(serializer.data)
+
+
+@api_view(['GET'])
+def member_detail(request, pk):
+    members = MembersGroup.objects.get(id=pk)
+    serializer = MembersGroupSerializer(members, many=False)
+    return Response(serializer.data)
+
+
+@api_view(['POST'])
+def member_create(request):
+    serializer = MembersGroupSerializer(data=request.data)
+
+    if serializer.is_valid():
+        serializer.person = request.person
+        serializer.save()
+
+    return Response(serializer.data)
+
+
+@api_view(['GET', 'POST'])
+def member_update(request, pk):
+    member = MembersGroup.objects.get(id=pk)
+    serializer = MembersGroupSerializer(instance=member,
+                                        data=request.data)
+
+    if serializer.is_valid():
+        serializer.save()
+
+    return Response(serializer.data)
+
+
+@api_view(['DELETE'])
+def member_delete(request, pk):
+    member = MembersGroup.objects.get(id=pk)
+    member.delete()
+    return Response('Item successfully deleted!')
+
 
 # def index(request):
 #     members = MembersGroup.objects.filter(person=request.user.profile)

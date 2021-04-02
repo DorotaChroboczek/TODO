@@ -19,11 +19,170 @@
 				</form>
 			</div>
 
-			<div id="members-list-wrapper">
+			<div id="list-wrapper">
 
 			</div>
 		</div>
 
 	</div>
+
+	<script type="text/javascript">
+
+		var activeItem = null
+		var members_list_snapshot = []
+
+		buildMembersList()
+
+		function buildMembersList(){
+			var wrapper = document.getElementById('list-wrapper')
+
+			var url = 'http://127.0.0.1:8000/api/member-list/'
+
+			fetch(url)
+			.then((resp) => resp.json())
+			.then(function (data){
+				console.log('Data:', data)
+
+				var members_list = data
+				for (var i in members_list){
+
+					try{
+						document.getElementById(`data.row-${i}`).remove()
+					}catch(err){
+					}
+
+					var item = `
+						<div id="data.row-${i}"
+						class="task-wrapper flex-wrapper">
+							<div style="flex:7">
+								<span class="member">${members_list[i].member}
+								</span>
+							</div>
+							<div style="flex:1">
+								<button class="btn btn-sm btn-outline-info edit">Edit
+								</button>
+							</div>
+							<div style="flex:1">
+								<button class="btn btn-sm btn-outline-dark delete">-
+								</button>
+							</div>
+						</div>
+					`
+					wrapper.innerHTML += item
+				}
+
+				if (members_list_snapshot.length > members_list.length){
+					for (var i = members_list.length; i < members_list_snapshot.length; i++){
+						document.getElementById(`data.row-${i}`).remove()
+					}
+				}
+				members_list_snapshot = members_list
+
+				for (var i in members_list){
+					var editBtn = document.getElementsByClassName('edit')[i]
+					var deleteBtn = document.getElementsByClassName('delete')[i]
+					// var member = document.getElementsByClassName('member')[i]
+
+					editBtn.addEventListener('click', (function (item){
+						return function (){
+							editItem(item)
+						}
+					})(members_list[i]))
+
+					deleteBtn.addEventListener('click', (function (item){
+						return function (){
+							deleteItem(item)
+						}
+					})(members_list[i]))
+
+					// member.addEventListener('click', (function (item){
+					// 	return function (){
+					// 		updateMember(item)
+					// 	}
+					// })(members_list[i]))
+				}
+			})
+		}
+
+		var form = document.getElementById('form-wrapper')
+		form.addEventListener('submit', function (e){
+			e.preventDefault()
+			console.log('Form submitted')
+			var url = 'http://127.0.0.1:8000/api/member-create/'
+			if (activeItem != null){
+				var url = `http://127.0.0.1:8000/api/member-update/${activeItem.id}/`
+				activeItem = null
+			}
+
+			var member = document.getElementById('member').value
+
+			fetch(url, {
+				method: 'POST',
+				headers: {
+					'Content-type': 'application/json',
+					'X-CSRFToken': csrftoken,
+				},
+				body: JSON.stringify({'member': member})
+			}).then(function (response){
+				buildMembersList()
+				document.getElementById('form').reset()
+			})
+		})
+
+		function editItem(item){
+			console.log('Item clicked:', item)
+			activeItem = item
+			document.getElementById('member').value = activeItem.member
+			// document.querySelector('input').addEventListener('blur', e => {
+			// 	console.log(e.target.value);
+			// })
+		}
+
+		function deleteItem(item) {
+			console.log('Item deleted:', item)
+			fetch(`http://127.0.0.1:8000/api/member-delete/${item.id}/`, {
+				method: 'DELETE',
+				headers: {
+					'Content-type': 'application/json',
+					'X-CSRFToken': csrftoken,
+				}
+			}).then((response) => {
+				buildMembersList()
+			})
+		}
+
+		function editMember(item){
+			console.log('complete clicked:', item)
+			fetch(`http://127.0.0.1:8000/api/member-update/${item.id}/`, {
+				method: 'POST',
+				headers: {
+					'Content-type': 'application/json',
+					'X-CSRFToken': csrftoken,
+				},
+				body: JSON.stringify({'member': item.member})
+			}).then((response) => {
+				buildMembersList()
+			})
+		}
+
+		function memberUpdateFix(item){
+			console.log('hardtrying:', item)
+			activeItem = item
+			document.getElementById('member').value = activeItem.member
+			item.member = document.getElementById('member').value
+			console.log('już')
+			fetch(`http://127.0.0.1:8000/api/member-update/${item.id}/`, {
+				method: 'POST',
+				headers: {
+					'Content-type': 'application/json',
+					'X-CSRFToken': csrftoken,
+				},
+				body: JSON.stringify({'member': item.member})
+			}).then((response) => {
+				buildMembersList()
+			})
+		}
+
+	</script>
 
 {% endblock %}
