@@ -1,2 +1,2 @@
 # TODO
-Todo app with Rest Api
+Todo app for familly members.
