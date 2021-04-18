@@ -10,7 +10,7 @@
 #### Responsibilities can be repeated and transferred to other member.
 
 ## Project status:
-#### In progres...
+#### In progress...
 
 ## Sources:
 #### https://www.djangoproject.com/
